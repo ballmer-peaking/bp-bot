@@ -1,7 +1,13 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
+const client = require('twilio')(process.env.accountSid, process.env.authToken);
+
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     context.log('HTTP trigger function processed a request.');
+
+    const accountSid = 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+    const authToken = 'your_auth_token';
+
     const name = (req.query.name || (req.body && req.body.name));
 
     if (name) {
