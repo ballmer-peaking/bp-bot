@@ -13,32 +13,12 @@
                 "description": "API for CosmosDB."
             }
         },
-        "aadClientId": {
-            "type": "string",
-            "metadata": {
-                "description": "ClientID from generating an Azure Active Directory app."
-            }
-        },
-        "aadTenant": {
-            "type": "string",
-            "metadata": {
-                "description": "ClientID from generating an Azure Active Directory app."
-            }
-        },
         "storageAccountType": {
             "type": "string",
             "defaultValue": "Standard_LRS",
             "allowedValues": ["Standard_LRS", "Standard_GRS", "Standard_RAGRS"],
             "metadata": {
               "description": "Storage Account type"
-            }
-          },
-          "runtime": {
-            "type": "string",
-            "defaultValue": "node",
-            "allowedValues": ["node", "dotnet", "java"],
-            "metadata": {
-              "description": "The language worker runtime to load in the function app."
             }
           }
     },
@@ -49,7 +29,7 @@
         "location": "[resourceGroup().location]",
         "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'azfunctions')]",
         "storageAccountid": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-        "functionWorkerRuntime": "[parameters('runtime')]"
+        "functionWorkerRuntime": "node"
     },
     "resources": [
         {
