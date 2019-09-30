@@ -1,16 +1,28 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
-const client = require('twilio')(process.env.accountSid, process.env.authToken);
+import * as Twilio from "twilio";
+import { SmsResponse } from "../common/models/smsResponse";
 
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
     context.log('HTTP trigger function processed a request.');
 
-    const accountSid = 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
-    const authToken = 'your_auth_token';
+    // const name = (req.query.name || (req.body && req.body.name));
 
-    const name = (req.query.name || (req.body && req.body.name));
+    const smsResponse = new SmsResponse();
+    smsResponse.messageSid = (req.body && req.body.MessageSid);
+    smsResponse.smsSid = (req.body && req.body.SmsSid);
+    smsResponse.accountSid = (req.body && req.body.AccountSid);
+    smsResponse.messagingServiceSid = (req.body && req.body.MessagingServiceSid);
+    smsResponse.from = (req.body && req.body.From);
+    smsResponse.to = (req.body && req.body.To);
+    smsResponse.body = (req.body && req.body.Body);
+    smsResponse.numMedia = (req.body && req.body.NumMedia);
 
-    if (name) {
+    const client = Twilio(process.env.accountSid, process.env.authToken);
+
+    
+
+    if (smsResponse.from) {
         context.res = {
             // status: 200, /* Defaults to 200 */
             body: "Hello " + (req.query.name || req.body.name)
