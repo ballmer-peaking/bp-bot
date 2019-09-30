@@ -1,6 +1,7 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
 import * as Twilio from "twilio";
 import { SmsResponse } from "../common/models/smsResponse";
+import MessagingResponse = require("twilio/lib/twiml/MessagingResponse");
 
 
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
@@ -23,10 +24,11 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
     
 
     if (smsResponse.from) {
-        context.res = {
-            // status: 200, /* Defaults to 200 */
-            body: "Hello " + (req.query.name || req.body.name)
-        };
+        const twiml = new MessagingResponse();
+        twiml.message("Hello " + smsResponse.body);
+
+        context.res.writeHead(200, {'Content-Type': 'text/xml'});
+        context.res.end(twiml.toString());
     }
     else {
         context.res = {
