@@ -9,31 +9,36 @@ const httpTrigger: AzureFunction = async function (context: Context, req: HttpRe
 
     // const name = (req.query.name || (req.body && req.body.name));
 
-    const smsResponse = new SmsResponse();
-    smsResponse.messageSid = (req.body && req.body.MessageSid);
-    smsResponse.smsSid = (req.body && req.body.SmsSid);
-    smsResponse.accountSid = (req.body && req.body.AccountSid);
-    smsResponse.messagingServiceSid = (req.body && req.body.MessagingServiceSid);
-    smsResponse.from = (req.body && req.body.From);
-    smsResponse.to = (req.body && req.body.To);
-    smsResponse.body = (req.body && req.body.Body);
-    smsResponse.numMedia = (req.body && req.body.NumMedia);
+    //const smsResponse = new SmsResponse();
+    //smsResponse.messageSid = (req.body && req.body.MessageSid);
+    //smsResponse.smsSid = (req.body && req.body.SmsSid);
+    //smsResponse.accountSid = (req.body && req.body.AccountSid);
+    //smsResponse.messagingServiceSid = (req.body && req.body.MessagingServiceSid);
+    //smsResponse.from = (req.body && req.body.From);
+    //smsResponse.to = (req.body && req.body.To);
+    //smsResponse.body = (req.body && req.body.Body);
+    //smsResponse.numMedia = (req.body && req.body.NumMedia);
 
-    const client = Twilio(process.env.accountSid, process.env.authToken);
+    // const client = Twilio(process.env.accountSid, process.env.authToken);
 
-    
 
-    if (smsResponse.from) {
+    if (req.query && req.query.From) {
         const twiml = new MessagingResponse();
-        twiml.message("Hello " + smsResponse.body);
+        twiml.message("Hello " + req.query.Body);
 
-        context.res.writeHead(200, {'Content-Type': 'text/xml'});
-        context.res.end(twiml.toString());
+        context.res = {
+            status: 200,
+            body: twiml.toString(),
+            headers: {
+                'Content-Type': 'text/xml',
+            }
+        };
+        context.done();
     }
     else {
         context.res = {
             status: 400,
-            body: "Please pass a name on the query string or in the request body"
+            body: "Please pass a name on the query string or in the request body" 
         };
     }
 };
